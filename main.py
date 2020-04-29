@@ -1,10 +1,13 @@
 from flask import Flask,Blueprint,jsonify,request
+from flask_cors import CORS,cross_origin
 from pykrx import stock
 from subpykrx import krxModule
 from CustomJSONencoder import CustomJSONEncoder
 from functools import wraps
 import time
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 app.json_encoder = CustomJSONEncoder
 module = krxModule()
 
@@ -12,6 +15,7 @@ module = krxModule()
 @app.route("/top10",methods=['POST'])
 def top10():
     if request.json:
+        print(request.json)
         top10_dict = module.getTop10(request.json['start'],request.json['end'])
         chartJSON = module.chartJSON(top10_dict)
         return jsonify(chartJSON)

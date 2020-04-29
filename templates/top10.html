@@ -1,8 +1,49 @@
-{%extends 'base.html'%}
-{%block content%}
-<canvas id=myChart width=400 height=400></canvas>
-<script>
-    var ctx = document.getElementById('myChart');
-    var myChart = new Chart(ctx,{{JSON_|tojson}});
-</script>
-{%endblock content%}
+<html>
+<head>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+  <script>
+  //const url = 'http://localhost:5001/top10'
+
+  //postData(url,{start:"20200401",end:"20200428"})
+  //.then(data => console.log(JSON.stringify(data)))
+  //.catch(error => console.error(error));
+  function replaceAll(str, searchStr, replaceStr) {
+    return str.split(searchStr).join(replaceStr);
+  }
+
+  function postData(){
+    let start = replaceAll(document.getElementById("start").value,"-","");
+    let end = replaceAll(document.getElementById("end").value,"-","");
+    // Default options are marked with *
+    return fetch('http://localhost:5001/top10', {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, cors, *same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        headers: {
+            'Content-Type': 'application/json',
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify({start:start,end:end}), // body data type must match "Content-Type" header
+    })
+    .then(response => {return response.json()})
+    .then(myJSON => {
+      console.log(JSON.stringify(myJSON))
+      const ctx = document.getElementById('myChart').getContext('2d');
+      // 픽셀 정리
+      ctx.clearRect(0, 0, 400, 400);
+      // 컨텍스트 리셋
+      ctx.beginPath();
+      let myChart = new Chart(ctx,myJSON);
+    })
+  }
+  </script>
+</head>
+<body>
+  <button onclick=postData()>버튼</button>
+  <input id="start" type="date"></input>
+  <input id="end" type="date"></input>  
+  <canvas id="myChart" width="400" height="400"></canvas>
+  </script>
+</body>
+</html>

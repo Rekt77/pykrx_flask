@@ -10,10 +10,9 @@ module = krxModule()
 
 @app.route("/top10")
 def top10():
-    return render_template('top10.html')
-
-#def top10():
-#    return module.getTop10("20200401","20200427")
+    top10_dict = module.getTop10("20200401","20200427")
+    chartJSON = module.chartJSON(top10_dict)
+    return render_template('top10.html',chartJSON=chartJSON)
 
 @app.route("/new")
 def printstock():
@@ -21,4 +20,4 @@ def printstock():
     return jsonify({df.iloc[i].name:df.iloc[i,:].to_dict() for i in range(len(df))})
 
 if __name__ == '__main__':
-    app.run(debug=True,host='localhost',port=5000)
+    app.run(debug=True,host='localhost',port=5002)

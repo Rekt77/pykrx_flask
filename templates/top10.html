@@ -1,8 +1,8 @@
 {%extends 'base.html'%}
 {%block content%}
-<canvas id=myChart width=400 heigth=800></canvas>
+<canvas id=myChart width=400 height=400></canvas>
 <script>
     var ctx = document.getElementById('myChart');
-    var myChart = new Chart(ctx,{{chartJSON|tojson|safe}});
+    var myChart = new Chart(ctx,{{JSON_|tojson}});
 </script>
 {%endblock content%}

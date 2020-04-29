@@ -1,4 +1,4 @@
-from flask import Flask,render_template,Blueprint,jsonify
+from flask import Flask,Blueprint,jsonify,request
 from pykrx import stock
 from subpykrx import krxModule
 from CustomJSONencoder import CustomJSONEncoder
@@ -8,16 +8,21 @@ app = Flask(__name__)
 app.json_encoder = CustomJSONEncoder
 module = krxModule()
 
-@app.route("/top10")
+#refactoring to restAPI
+@app.route("/top10",methods=['POST'])
 def top10():
-    top10_dict = module.getTop10("20200401","20200427")
-    chartJSON = module.chartJSON(top10_dict)
-    return render_template('top10.html',chartJSON=chartJSON)
+    if request.json:
+        top10_dict = module.getTop10(request.json['start'],request.json['end'])
+        chartJSON = module.chartJSON(top10_dict)
+        return jsonify(chartJSON)
+    else:
+        return jsonify({'msg':'no input vlaue'})
 
-@app.route("/new")
+@app.route("/today")
 def printstock():
-    df = stock.get_market_price_change_by_ticker("20200427", "20200427")
+    now = time.strftime('%Y%m%d')
+    df = stock.get_market_price_change_by_ticker(now, now)
     return jsonify({df.iloc[i].name:df.iloc[i,:].to_dict() for i in range(len(df))})
 
 if __name__ == '__main__':
-    app.run(debug=True,host='localhost',port=5002)
+    app.run(debug=True,host='localhost',port=5001)

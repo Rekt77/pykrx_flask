@@ -14,11 +14,11 @@ class krxModule():
     
     def chartJSON(self,dic):
         tmp_dic = {ticker["종목명"]:ticker["등락률"] for _,ticker in dic.items()}
-        labels = [tmp_dic.keys()]
-        datas = [tmp_dic.values()]
+        labels = list(tmp_dic.keys())
+        datas = list(tmp_dic.values())
         rand = [[np.random.randint(0,255),np.random.randint(0,255),np.random.randint(0,255)] for _ in range(len(labels))]
         backgroundColors = ['rgba(%d,%d,%d,0.2)'%(rand[i][0],rand[i][1],rand[i][2]) for i in range(len(labels))]
-        borderColors = backgroundColors = ['rgba(%d,%d,%d,1)'%(rand[i][0],rand[i][1],rand[i][2]) for i in range(len(labels))]
+        borderColors = ['rgba(%d,%d,%d,1)'%(rand[i][0],rand[i][1],rand[i][2]) for i in range(len(labels))]
         json_ = {
             'type': 'bar',
             'data': {

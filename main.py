@@ -8,13 +8,9 @@ app = Flask(__name__)
 app.json_encoder = CustomJSONEncoder
 module = krxModule()
 
-@app.route("/stock/<ticker>")
-def ticker2name(ticker):
-    return module.getName_by_ticker(ticker)
-
-@app.route("/all")
-def printNameMap():
-    return jsonify(module.nameMap)
+@app.route("/top10")
+def top10():
+    return module.getTop10("20200401","20200427")
 
 @app.route("/new")
 def printstock():

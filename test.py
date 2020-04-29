@@ -9,14 +9,15 @@ nameList = list()
 #    nameList.append(each)
 
 # 랭킹 매길때
-df = stock.get_market_price_change_by_ticker("20200428", "20200428")
+df = stock.get_market_price_change_by_ticker("20200401", "20200427")
 #print(df.sort_values('등락률',ascending=False))
-df = {df.iloc[i].name:df.iloc[i,:].to_dict() for i in range(len(df))}
-for i in itertools.islice(df.items(),2):
-    print(i)
+#{df.iloc[i].name:df.iloc[i,:].to_dict() for i in range(len(df))}
+#for i in itertools.islice(df.items(),2):
+#    print(i)
 #print({df.iloc[i].name:df.iloc[i,:].to_dict() for i in range(3)})
+df = df.sort_values("등락률",ascending=False).head(10)
 
-
+print({df.iloc[i].name:df.iloc[i,:].to_dict() for i in range(len(df))})
 #종목별 그래프 그릴 때
-df = stock.get_market_ohlcv_by_date("20200401", "20200402", "950140", "d")
+#df = stock.get_market_ohlcv_by_date("20200401", "20200402", "950140", "d")
 #print(df.head(3))

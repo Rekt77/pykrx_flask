@@ -8,6 +8,7 @@
   //postData(url,{start:"20200401",end:"20200428"})
   //.then(data => console.log(JSON.stringify(data)))
   //.catch(error => console.error(error));
+  var newChart = null
   function replaceAll(str, searchStr, replaceStr) {
     return str.split(searchStr).join(replaceStr);
   }
@@ -28,22 +29,22 @@
     })
     .then(response => {return response.json()})
     .then(myJSON => {
-      console.log(JSON.stringify(myJSON))
-      const ctx = document.getElementById('myChart').getContext('2d');
-      // 픽셀 정리
-      ctx.clearRect(0, 0, 400, 400);
-      // 컨텍스트 리셋
-      ctx.beginPath();
-      let myChart = new Chart(ctx,myJSON);
+      let ctx = document.getElementById('myChart').getContext('2d');
+      if(newChart!=null){
+        newChart.destroy();
+      }
+      newChart = new Chart(ctx,myJSON);
     })
   }
   </script>
 </head>
 <body>
-  <button onclick=postData()>버튼</button>
   <input id="start" type="date"></input>
-  <input id="end" type="date"></input>  
-  <canvas id="myChart" width="400" height="400"></canvas>
+  <input id="end" type="date"></input>
+  <button onclick=postData()>분석</button>
+  <div id="chart-div">
+    <canvas id="myChart" width="400" height="400"></canvas>
+  </div>
   </script>
 </body>
 </html>

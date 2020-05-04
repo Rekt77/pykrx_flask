@@ -20,9 +20,24 @@
     return str.split(searchStr).join(replaceStr);
   }
 
+  function showSpinner(){
+    document.getElementById('button-addon2').innerHTML="<span class='spinner-border spinner-border-sm mr-2' role='status' aria-hidden='true'></span>검색 중.."
+    document.getElementById('button-addon2').classList.add("disabled")
+  }
+  
+  function hideSpinner(){
+    document.getElementById('button-addon2').innerHTML="검색"
+    document.getElementById('button-addon2').classList.remove("disabled")
+
+  }
+
   function postData(){
     let start = replaceAll(document.getElementById("start").value,"-","");
     let end = replaceAll(document.getElementById("end").value,"-","");
+    if(newChart!=null){
+        newChart.destroy();
+    }
+    showSpinner()
     // Default options are marked with *
     return fetch('http://localhost:5001/top10', {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -36,22 +51,37 @@
     })
     .then(response => {return response.json()})
     .then(myJSON => {
+      hideSpinner()
       let ctx = document.getElementById('myChart').getContext('2d');
-      if(newChart!=null){
-        newChart.destroy();
-      }
       newChart = new Chart(ctx,myJSON);
+      document.getElementById('myChart').style.display = "inline"
     })
   }
   </script>
 </head>
 <body>
-  <input id="start" type="date"></input>
-  <input id="end" type="date"></input>
-  <button onclick=postData()>분석</button>
-  <div id="chart-div">
-    <canvas id="myChart" width="400" height="400"></canvas>
-  </div>
+  <nav class="navbar navbar-dark bg-primary">
+    <span class="navbar-brand mb-0 h1">My fintech</span>
+  </nav>
+  <div class="container-fluid m-5" margin-top='20'></div>
+  <div class="container">
+      <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Select date</span>
+          </div>
+          <input id="start" type="date" aria-label="start date" class="form-control">
+          <input id="end" type="date" aria-label="end date" class="form-control">
+          <div class="input-group-append">
+              <button class="btn btn-primary" onclick=postData() type="button" id="button-addon2">검색</button>  
+          </div>
+        </div>
+      <div class="row m-5">
+          <div class="col align-self-center text-center">
+            <canvas id="myChart" width="400" height="400" display="flex"></canvas>
+          </div>
+      </div>
+    </div>
+
   <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
